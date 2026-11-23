@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Convidados - Casamento Eiji & Ingrid</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fonte Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .fade-in {
+            animation: fadeIn 0.18s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <!-- Cabeçalho -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between py-3.5 gap-2">
+                <div>
+                    <h1 class="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2">
+                        <span>💍</span> Lista de Convidados
+                    </h1>
+                    <p class="text-xs sm:text-sm text-slate-500">Casamento Eiji & Ingrid • Gestão de Presença</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="salvarHTML()" class="text-xs font-medium text-white bg-indigo-600 hover:bg-indigo-700 px-3.5 py-1.5 rounded-lg transition-colors shadow-sm flex items-center gap-1.5">
+                        💾 Salvar HTML
+                    </button>
+                </div>
+            </div>
+
+            <!-- Navegação por Abas -->
+            <nav class="flex space-x-1 overflow-x-auto pb-px -mb-px" aria-label="Abas">
+                <button type="button" onclick="mudarAba('resumo')" id="tab-resumo" class="tab-btn whitespace-nowrap py-2.5 px-4 border-b-2 font-medium text-sm transition-colors">
+                    📊 Resumo
+                </button>
+                <button type="button" onclick="mudarAba('eiji')" id="tab-eiji" class="tab-btn whitespace-nowrap py-2.5 px-4 border-b-2 font-medium text-sm transition-colors">
+                    Família Eiji
+                </button>
+                <button type="button" onclick="mudarAba('ingrid')" id="tab-ingrid" class="tab-btn whitespace-nowrap py-2.5 px-4 border-b-2 font-medium text-sm transition-colors">
+                    Família Ingrid
+                </button>
+                <button type="button" onclick="mudarAba('amigos')" id="tab-amigos" class="tab-btn whitespace-nowrap py-2.5 px-4 border-b-2 font-medium text-sm transition-colors">
+                    Amigos
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-5">
+        <div id="app-content" class="fade-in"></div>
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="bg-white border-t border-slate-200 py-3 mt-auto">
+        <div class="max-w-6xl mx-auto px-4 text-center text-xs text-slate-400">
+            Todas as alterações são salvas automaticamente no seu navegador.
+        </div>
+    </footer>
+
+    <!-- Toast de Notificação -->
+    <div id="toast" class="fixed bottom-4 right-4 bg-slate-800 text-white text-sm px-4 py-2.5 rounded-xl shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 z-50 pointer-events-none">
+        Mensagem
+    </div>
+
+    <script>
+        // =========================================================================
+        // DADOS INICIAIS EXATOS (Delimitados para exportação segura do HTML)
+        // =========================================================================
+        const DADOS_ORIGINAIS = /* DATA_START */ {
+            "padrinhos": ["Motta", "Ana", "Amanda Luz", "Dandara", "Heringer", "Letícia", "Rye", "Kenji", "Rael", "Ravi"],
+            "tetoAco": ["Bryan", "Matheus", "Daniel", "Novelli"],
+            "eiji": {
+                "nome": "Família Eiji",
+                "guests": [
+                    { "nome": "Alessandra", "status": "Hold" },
+                    { "nome": "Eichi", "status": "Hold" },
+                    { "nome": "Rye", "status": "Hold" },
+                    { "nome": "Heitor", "status": "Hold" },
+                    { "nome": "Kenji", "status": "Hold" },
+                    { "nome": "Heloisa W.", "status": "Hold" },
+                    { "nome": "Julianna", "status": "Hold" },
+                    { "nome": "Elisa", "status": "Hold" },
+                    { "nome": "Ester", "status": "Hold" },
+                    { "nome": "Enzo", "status": "Neg" },
+                    { "nome": "Amanda", "status": "Hold" },
+                    { "nome": "Fábio", "status": "Hold" },
+                    { "nome": "Sofia", "status": "Hold" },
+                    { "nome": "João", "status": "Hold" },
+                    { "nome": "Mine", "status": "Hold" },
+                    { "nome": "Eitaro", "status": "Hold" },
+                    { "nome": "Mari", "status": "Hold" },
+                    { "nome": "Kensuke", "status": "Hold" },
+                    { "nome": "Emi", "status": "Hold" },
+                    { "nome": "Carla", "status": "Hold" },
+                    { "nome": "Filé", "status": "Hold" },
+                    { "nome": "Bruno", "status": "Hold" },
+                    { "nome": "Priscila", "status": "Hold" },
+                    { "nome": "Matheus", "status": "Hold" },
+                    { "nome": "Marcelle", "status": "Hold" },
+                    { "nome": "Júnior", "status": "Hold" },
+                    { "nome": "Sônia", "status": "Hold" },
+                    { "nome": "Antônio", "status": "Hold" },
+                    { "nome": "Vitor Hugo", "status": "Hold" },
+                    { "nome": "Thaidy", "status": "Hold" },
+                    { "nome": "Maria", "status": "Hold" },
+                    { "nome": "Anna Cristina", "status": "Hold" },
+                    { "nome": "Yoiti", "status": "Hold" },
+                    { "nome": "Miyuki", "status": "Hold" },
+                    { "nome": "Namorado Miyuki", "status": "Neg" }
+                ],
+                "repescagem": ["Igor", "Camila", "Alexandre", "Tatiana", "Fernanda", "Fabiano"]
+            },
+            "ingrid": {
+                "nome": "Família Ingrid",
+                "guests": [
+                    { "nome": "Pedro", "status": "Hold" },
+                    { "nome": "Graça", "status": "Hold" },
+                    { "nome": "Letícia", "status": "Hold" },
+                    { "nome": "Gabriel", "status": "Hold" },
+                    { "nome": "Valdenir", "status": "Hold" },
+                    { "nome": "Elbio", "status": "Hold" },
+                    { "nome": "Ana", "status": "Hold" },
+                    { "nome": "Luiz", "status": "Hold" },
+                    { "nome": "Luiz Paulo", "status": "Hold" },
+                    { "nome": "Luan", "status": "Hold" },
+                    { "nome": "Tia Dedé", "status": "Hold" },
+                    { "nome": "Adi", "status": "Hold" },
+                    { "nome": "André", "status": "Hold" },
+                    { "nome": "Namorada do André", "status": "Hold" },
+                    { "nome": "Fernanda", "status": "Hold" },
+                    { "nome": "Theo", "status": "Hold" },
+                    { "nome": "Gael", "status": "Hold" },
+                    { "nome": "Tia Cacá", "status": "Hold" },
+                    { "nome": "Gutão", "status": "Hold" },
+                    { "nome": "Tais", "status": "Hold" },
+                    { "nome": "Gustavo", "status": "Hold" },
+                    { "nome": "Larissa", "status": "Hold" },
+                    { "nome": "Beatriz", "status": "Hold" },
+                    { "nome": "Rodrigo", "status": "Hold" },
+                    { "nome": "Betina", "status": "Hold" },
+                    { "nome": "Pietra", "status": "Hold" },
+                    { "nome": "Carmen Lúcia", "status": "Hold" },
+                    { "nome": "Dorio", "status": "Hold" },
+                    { "nome": "Larissa", "status": "Hold" },
+                    { "nome": "Pedro", "status": "Hold" },
+                    { "nome": "Lícia", "status": "Hold" }
+                ],
+                "repescagem": ["Igor"]
+            },
+            "amigos": {
+                "nome": "Amigos",
+                "guests": [
+                    { "nome": "Motta", "status": "Hold" },
+                    { "nome": "Ana", "status": "Hold" },
+                    { "nome": "Bryan", "status": "Hold" },
+                    { "nome": "Dandara", "status": "Hold" },
+                    { "nome": "Matheus", "status": "Hold" },
+                    { "nome": "Amanda Luz", "status": "Hold" },
+                    { "nome": "Isabela", "status": "Hold" },
+                    { "nome": "Heringer", "status": "Hold" },
+                    { "nome": "Daniel", "status": "Hold" },
+                    { "nome": "Stefani", "status": "Hold" },
+                    { "nome": "Arantes", "status": "Hold" },
+                    { "nome": "Carol", "status": "Hold" },
+                    { "nome": "Novelli", "status": "Hold" },
+                    { "nome": "Mariana", "status": "Neg" },
+                    { "nome": "Ravi", "status": "Hold" },
+                    { "nome": "Aninha", "status": "Hold" },
+                    { "nome": "Rael", "status": "Hold" }
+                ],
+                "repescagem": ["Yuri", "Esposa", "Brasil", "Ray", "Bernardo", "Shilpi"]
+            }
+        } /* DATA_END */;
+
+        const STORAGE_KEY = "casamento_eiji_ingrid_v3";
+
+        // =========================================================================
+        // ESTADO DA APLICAÇÃO
+        // =========================================================================
+        let dados = {};
+        let abaAtiva = "resumo";
+        let filtroStatus = "Todos";
+        let editandoIndex = null;
+        let toastTimeout = null;
+        let arrastandoItem = null;
+
+        // Inicialização ao carregar a página
+        window.onload = function() {
+            carregarDados();
+            mudarAba("resumo");
+        };
+
+        // =========================================================================
+        // PERSISTÊNCIA (LOCALSTORAGE)
+        // =========================================================================
+        function carregarDados() {
+            try {
+                const salvo = localStorage.getItem(STORAGE_KEY);
+                if (salvo) {
+                    const parsed = JSON.parse(salvo);
+                    if (parsed && parsed.eiji && parsed.ingrid && parsed.amigos) {
+                        dados = parsed;
+                        if (!Array.isArray(dados.padrinhos)) dados.padrinhos = [...DADOS_ORIGINAIS.padrinhos];
+                        if (!Array.isArray(dados.tetoAco)) dados.tetoAco = [...DADOS_ORIGINAIS.tetoAco];
+                        return;
+                    }
+                }
+            } catch (e) {
+                console.error("Erro ao ler localStorage:", e);
+            }
+            dados = JSON.parse(JSON.stringify(DADOS_ORIGINAIS));
+            salvarDados();
+        }
+
+        function salvarDados() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(dados));
+            } catch (e) {
+                console.error("Erro ao salvar no localStorage:", e);
+            }
+        }
+
+        // =========================================================================
+        // ARRASTAR E SOLTAR (DRAG AND DROP)
+        // =========================================================================
+        function aoIniciarArraste(event, tipo, chave, indice) {
+            if (editandoIndex !== null) {
+                event.preventDefault();
+                return;
+            }
+            arrastandoItem = { tipo, chave, indice };
+            event.dataTransfer.effectAllowed = "move";
+            event.dataTransfer.setData("text/plain", String(indice));
+        }
+
+        function aoSobreArraste(event, tipo, chave, indice) {
+            if (!arrastandoItem || arrastandoItem.tipo !== tipo || arrastandoItem.chave !== chave || arrastandoItem.indice === indice) {
+                return;
+            }
+            event.preventDefault();
+            event.dataTransfer.dropEffect = "move";
+        }
+
+        function aoSoltarItem(event, tipo, chave, indiceDestino) {
+            event.preventDefault();
+            if (!arrastandoItem || arrastandoItem.tipo !== tipo || arrastandoItem.chave !== chave) {
+                arrastandoItem = null;
+                return;
+            }
+
+            const indiceOrigem = arrastandoItem.indice;
+            arrastandoItem = null;
+            if (indiceOrigem === indiceDestino) return;
+
+            let lista;
+            if (tipo === "guest") {
+                lista = dados[chave].guests;
+            } else if (tipo === "repescagem") {
+                lista = dados[chave].repescagem;
+            } else if (tipo === "especial") {
+                lista = dados[chave];
+            }
+
+            if (!Array.isArray(lista) || indiceOrigem < 0 || indiceOrigem >= lista.length || indiceDestino < 0 || indiceDestino >= lista.length) {
+                return;
+            }
+
+            const [itemMovido] = lista.splice(indiceOrigem, 1);
+            lista.splice(indiceDestino, 0, itemMovido);
+
+            salvarDados();
+            renderizarAbaAtual();
+        }
+
+        function aoFinalizarArraste() {
+            arrastandoItem = null;
+        }
+
+        // =========================================================================
+        // UTILITÁRIOS
+        // =========================================================================
+        function escaparHTML(str) {
+            return String(str)
+                .replace(/&/g, "&")
+                .replace(/</g, "<")
+                .replace(/>/g, ">")
+                .replace(/"/g, """)
+                .replace(/'/g, "'");
+        }
+
+        function contarGrupo(grupoKey) {
+            const lista = dados[grupoKey].guests;
+            let confirmados = 0;
+            let naoVao = 0;
+            let aguardando = 0;
+
+            for (let i = 0; i < lista.length; i++) {
+                const st = lista[i].status;
+                if (st === "Confirmado") confirmados++;
+                else if (st === "Neg") naoVao++;
+                else aguardando++;
+            }
+
+            return {
+                total: lista.length,
+                confirmados,
+                naoVao,
+                aguardando,
+                repescagem: dados[grupoKey].repescagem.length
+            };
+        }
+
+        function contarGlobal() {
+            const gEiji = contarGrupo("eiji");
+            const gIngrid = contarGrupo("ingrid");
+            const gAmigos = contarGrupo("amigos");
+
+            return {
+                total: gEiji.total + gIngrid.total + gAmigos.total,
+                confirmados: gEiji.confirmados + gIngrid.confirmados + gAmigos.confirmados,
+                naoVao: gEiji.naoVao + gIngrid.naoVao + gAmigos.naoVao,
+                aguardando: gEiji.aguardando + gIngrid.aguardando + gAmigos.aguardando
+            };
+        }
+
+        function mostrarToast(msg) {
+            const toast = document.getElementById("toast");
+            toast.textContent = msg;
+            toast.classList.remove("translate-y-20", "opacity-0");
+            if (toastTimeout) clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.add("translate-y-20", "opacity-0");
+            }, 2500);
+        }
+
+        // =========================================================================
+        // NAVEGAÇÃO E RENDERIZAÇÃO
+        // =========================================================================
+        function mudarAba(novaAba) {
+            abaAtiva = novaAba;
+            filtroStatus = "Todos";
+            editandoIndex = null;
+
+            const abas = ["resumo", "eiji", "ingrid", "amigos"];
+            abas.forEach(aba => {
+                const btn = document.getElementById("tab-" + aba);
+                if (aba === abaAtiva) {
+                    btn.className = "tab-btn whitespace-nowrap py-2.5 px-4 border-b-2 border-indigo-600 text-indigo-600 font-semibold text-sm transition-colors";
+                } else {
+                    btn.className = "tab-btn whitespace-nowrap py-2.5 px-4 border-b-2 border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 font-medium text-sm transition-colors";
+                }
+            });
+
+            renderizarAbaAtual();
+        }
+
+        function renderizarAbaAtual() {
+            const container = document.getElementById("app-content");
+            if (abaAtiva === "resumo") {
+                container.innerHTML = renderizarResumo();
+            } else {
+                container.innerHTML = renderizarGrupo(abaAtiva);
+            }
+        }
+
+        // =========================================================================
+        // ABA RESUMO
+        // =========================================================================
+        function renderizarResumo() {
+            const global = contarGlobal();
+            const grupos = ["eiji", "ingrid", "amigos"];
+
+            const cardsGrupos = grupos.map(key => {
+                const c = contarGrupo(key);
+                const nome = dados[key].nome;
+                return `
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="text-base font-bold text-slate-800">${nome}</h3>
+                                <span class="text-xs font-semibold bg-slate-100 text-slate-600 px-2.5 py-0.5 rounded-full">${c.total} convidados</span>
+                            </div>
+                            <div class="grid grid-cols-3 gap-2 text-center mb-4">
+                                <div class="bg-emerald-50 rounded-xl p-2 border border-emerald-100">
+                                    <p class="text-[11px] font-medium text-emerald-700">Confirmados</p>
+                                    <p class="text-lg font-bold text-emerald-800">${c.confirmados}</p>
+                                </div>
+                                <div class="bg-amber-50 rounded-xl p-2 border border-amber-100">
+                                    <p class="text-[11px] font-medium text-amber-700">Hold</p>
+                                    <p class="text-lg font-bold text-amber-800">${c.aguardando}</p>
+                                </div>
+                                <div class="bg-rose-50 rounded-xl p-2 border border-rose-100">
+                                    <p class="text-[11px] font-medium text-rose-700">Não vão</p>
+                                    <p class="text-lg font-bold text-rose-800">${c.naoVao}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between pt-3 border-t border-slate-100 text-xs">
+                            <button type="button" onclick="mudarAba('${key}')" class="text-indigo-600 hover:text-indigo-800 font-semibold">
+                                Gerenciar
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join("");
+
+            const renderListaEspecial = (tipo, titulo, icone) => {
+                const lista = dados[tipo];
+                return `
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                                <span>${icone}</span> ${titulo}
+                            </h3>
+                            <span class="text-xs font-semibold bg-indigo-50 text-indigo-700 px-2.5 py-0.5 rounded-full">${lista.length}</span>
+                        </div>
+                        <form onsubmit="adicionarListaEspecial(event, '${tipo}')" class="flex gap-2 mb-3">
+                            <input type="text" id="input-especial-${tipo}" required placeholder="Adicionar nome..." 
+                                class="flex-1 px-3 py-1.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <button type="submit" class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl transition-colors">
+                                + Add
+                            </button>
+                        </form>
+                        <div class="flex flex-wrap gap-1.5">
+                            ${lista.length === 0 ? `<p class="text-xs text-slate-400 italic">Nenhum nome na lista.</p>` : lista.map((nome, idx) => `
+                                <span draggable="true"
+                                    ondragstart="aoIniciarArraste(event, 'especial', '${tipo}', ${idx})"
+                                    ondragover="aoSobreArraste(event, 'especial', '${tipo}', ${idx})"
+                                    ondrop="aoSoltarItem(event, 'especial', '${tipo}', ${idx})"
+                                    ondragend="aoFinalizarArraste()"
+                                    class="inline-flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200/80 text-slate-700 text-xs font-medium px-2.5 py-1 rounded-lg transition-colors cursor-grab active:cursor-grabbing">
+                                    <span class="text-slate-400 select-none">⋮⋮</span>
+                                    ${escaparHTML(nome)}
+                                    <button type="button" onclick="removerListaEspecial('${tipo}', ${idx})" class="text-slate-400 hover:text-rose-600 font-bold" title="Remover">✕</button>
+                                </span>
+                            `).join("")}
+                        </div>
+                    </div>
+                `;
+            };
+
+            return `
+                <!-- Cards Globais -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                        <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Total de Convidados</p>
+                        <p class="text-2xl sm:text-3xl font-bold text-slate-900 mt-1">${global.total}</p>
+                    </div>
+                    <div class="bg-emerald-50/70 p-4 rounded-2xl border border-emerald-200 shadow-sm">
+                        <p class="text-xs font-medium text-emerald-700 uppercase tracking-wider">Confirmados</p>
+                        <p class="text-2xl sm:text-3xl font-bold text-emerald-800 mt-1">${global.confirmados}</p>
+                    </div>
+                    <div class="bg-amber-50/70 p-4 rounded-2xl border border-amber-200 shadow-sm">
+                        <p class="text-xs font-medium text-amber-700 uppercase tracking-wider">Aguardando (Hold)</p>
+                        <p class="text-2xl sm:text-3xl font-bold text-amber-800 mt-1">${global.aguardando}</p>
+                    </div>
+                    <div class="bg-rose-50/70 p-4 rounded-2xl border border-rose-200 shadow-sm">
+                        <p class="text-xs font-medium text-rose-700 uppercase tracking-wider">Não vão (Neg)</p>
+                        <p class="text-2xl sm:text-3xl font-bold text-rose-800 mt-1">${global.naoVao}</p>
+                    </div>
+                </div>
+
+                <!-- Resumo por Grupo -->
+                <h2 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3">Resumo por Grupo</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    ${cardsGrupos}
+                </div>
+
+                <!-- Padrinhos e Teto Aço -->
+                <h2 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3">Listas Especiais</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    ${renderListaEspecial("padrinhos", "Padrinhos", "💐")}
+                    ${renderListaEspecial("tetoAco", "Teto Aço", "🎸")}
+                </div>
+            `;
+        }
+
+        // =========================================================================
+        // ABAS DAS LISTAS (FAMÍLIA EIJI, FAMÍLIA INGRID, AMIGOS)
+        // =========================================================================
+        function renderizarGrupo(grupoKey) {
+            const grupo = dados[grupoKey];
+            const c = contarGrupo(grupoKey);
+
+            // Filtragem mantendo o índice original para ações seguras
+            const listaFiltrada = [];
+            for (let i = 0; i < grupo.guests.length; i++) {
+                const g = grupo.guests[i];
+                const matchStatus = (filtroStatus === "Todos") || (g.status === filtroStatus);
+                if (matchStatus) {
+                    listaFiltrada.push({ item: g, indexOriginal: i });
+                }
+            }
+
+            return `
+                <!-- Contadores Rápidos -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+                    <div class="bg-white px-4 py-2.5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+                        <span class="text-xs font-medium text-slate-500">Total</span>
+                        <span class="text-lg font-bold text-slate-900">${c.total}</span>
+                    </div>
+                    <div class="bg-emerald-50/80 px-4 py-2.5 rounded-xl border border-emerald-200 shadow-sm flex items-center justify-between">
+                        <span class="text-xs font-medium text-emerald-700">Confirmados</span>
+                        <span class="text-lg font-bold text-emerald-800">${c.confirmados}</span>
+                    </div>
+                    <div class="bg-amber-50/80 px-4 py-2.5 rounded-xl border border-amber-200 shadow-sm flex items-center justify-between">
+                        <span class="text-xs font-medium text-amber-700">Aguardando</span>
+                        <span class="text-lg font-bold text-amber-800">${c.aguardando}</span>
+                    </div>
+                    <div class="bg-rose-50/80 px-4 py-2.5 rounded-xl border border-rose-200 shadow-sm flex items-center justify-between">
+                        <span class="text-xs font-medium text-rose-700">Não vão</span>
+                        <span class="text-lg font-bold text-rose-800">${c.naoVao}</span>
+                    </div>
+                </div>
+
+                <!-- Barra de Filtro e Adicionar Convidado -->
+                <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm mb-4 flex flex-col lg:flex-row gap-3 justify-between">
+                    <!-- Filtro -->
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <select onchange="atualizarFiltro(this.value)" 
+                            class="px-3 py-1.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option value="Todos" ${filtroStatus === "Todos" ? "selected" : ""}>Todos os status</option>
+                            <option value="Confirmado" ${filtroStatus === "Confirmado" ? "selected" : ""}>✅ Confirmado</option>
+                            <option value="Hold" ${filtroStatus === "Hold" ? "selected" : ""}>⏳ Hold (Aguardando)</option>
+                            <option value="Neg" ${filtroStatus === "Neg" ? "selected" : ""}>❌ Neg (Não vai)</option>
+                        </select>
+                    </div>
+
+                    <!-- Formulário Compacto para Adicionar (Sempre Hold por padrão) -->
+                    <form onsubmit="adicionarConvidado(event, '${grupoKey}')" class="flex flex-col sm:flex-row gap-2 flex-1 lg:justify-end">
+                        <input type="text" id="novo-convidado-nome" required placeholder="Nome do convidado..." 
+                            class="px-3 py-1.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 flex-1 lg:max-w-xs">
+                        <button type="submit" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-xl transition-colors whitespace-nowrap">
+                            + Adicionar
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Tabela Principal (Linhas compactas) -->
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mb-6">
+                    ${listaFiltrada.length === 0 ? `
+                        <div class="p-8 text-center text-sm text-slate-400">
+                            Nenhum convidado encontrado com o filtro atual.
+                        </div>
+                    ` : `
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-50 border-b border-slate-200 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+                                        <th class="py-2 px-3 w-10">#</th>
+                                        <th class="py-2 px-3">Nome</th>
+                                        <th class="py-2 px-3 w-40">Status</th>
+                                        <th class="py-2 px-3 text-right w-28">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 text-sm">
+                                    ${listaFiltrada.map((entry, visIdx) => {
+                                        const g = entry.item;
+                                        const idx = entry.indexOriginal;
+                                        const emEdicao = (editandoIndex === idx);
+
+                                        let selectStyle = "bg-amber-50 text-amber-800 border-amber-200";
+                                        if (g.status === "Confirmado") selectStyle = "bg-emerald-50 text-emerald-800 border-emerald-200";
+                                        if (g.status === "Neg") selectStyle = "bg-rose-50 text-rose-800 border-rose-200";
+
+                                        return `
+                                            <tr draggable="${!emEdicao}"
+                                                ondragstart="aoIniciarArraste(event, 'guest', '${grupoKey}', ${idx})"
+                                                ondragover="aoSobreArraste(event, 'guest', '${grupoKey}', ${idx})"
+                                                ondrop="aoSoltarItem(event, 'guest', '${grupoKey}', ${idx})"
+                                                ondragend="aoFinalizarArraste()"
+                                                class="hover:bg-slate-50/80 transition-colors">
+                                                <td class="py-1.5 px-3 text-xs text-slate-400 font-medium whitespace-nowrap">
+                                                    <span class="cursor-grab active:cursor-grabbing text-slate-300 hover:text-slate-500 mr-1 select-none" title="Arraste para reordenar">⋮⋮</span>${visIdx + 1}
+                                                </td>
+                                                <td class="py-1.5 px-3 font-medium text-slate-800">
+                                                    ${emEdicao ? `
+                                                        <input type="text" id="edit-input-${idx}" value="${escaparHTML(g.nome)}"
+                                                            onblur="salvarEdicao('${grupoKey}', ${idx})"
+                                                            onkeydown="if(event.key==='Enter'){this.blur();} else if(event.key==='Escape'){cancelarEdicao();}"
+                                                            class="px-2 py-0.5 text-sm border border-indigo-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full max-w-xs">
+                                                    ` : `
+                                                        <div class="flex items-center gap-1.5 group">
+                                                            <span onclick="iniciarEdicao(${idx})" class="cursor-pointer hover:text-indigo-600 transition-colors" title="Clique para editar">${escaparHTML(g.nome)}</span>
+                                                            <button type="button" onclick="iniciarEdicao(${idx})" class="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-indigo-600 text-xs transition-opacity" title="Editar nome">✏️</button>
+                                                        </div>
+                                                    `}
+                                                </td>
+                                                <td class="py-1.5 px-3">
+                                                    <select onchange="alterarStatus('${grupoKey}', ${idx}, this.value)" 
+                                                        class="text-xs font-semibold px-2 py-1 rounded-lg border cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 ${selectStyle}">
+                                                        <option value="Confirmado" ${g.status === "Confirmado" ? "selected" : ""}>✅ Confirmado</option>
+                                                        <option value="Hold" ${g.status === "Hold" ? "selected" : ""}>⏳ Hold</option>
+                                                        <option value="Neg" ${g.status === "Neg" ? "selected" : ""}>❌ Neg</option>
+                                                    </select>
+                                                </td>
+                                                <td class="py-1.5 px-3 text-right whitespace-nowrap">
+                                                    <button type="button" onclick="rebaixarConvidado('${grupoKey}', ${idx})" 
+                                                        class="text-slate-400 hover:text-amber-600 p-1 rounded-lg hover:bg-amber-50 transition-colors text-xs" title="Rebaixar para Repescagem">
+                                                        ⬇️
+                                                    </button>
+                                                    <button type="button" onclick="removerConvidado('${grupoKey}', ${idx})" 
+                                                        class="text-slate-400 hover:text-rose-600 p-1 rounded-lg hover:bg-rose-50 transition-colors text-xs" title="Remover convidado">
+                                                        🗑️
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        `;
+                                    }).join("")}
+                                </tbody>
+                            </table>
+                        </div>
+                    `}
+                </div>
+
+                <!-- Seção Repescagem -->
+                <div class="bg-slate-100/90 p-4 rounded-2xl border border-slate-200">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+                        <div>
+                            <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                                <span>🔄</span> Repescagem (${grupo.repescagem.length})
+                            </h3>
+                            <p class="text-xs text-slate-500">Lista de espera. Promova para a lista principal quando surgir vaga.</p>
+                        </div>
+                        <form onsubmit="adicionarRepescagem(event, '${grupoKey}')" class="flex gap-2">
+                            <input type="text" id="nova-repescagem-nome" required placeholder="Nome na repescagem..." 
+                                class="px-3 py-1.5 text-xs bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <button type="submit" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-900 text-white text-xs font-medium rounded-xl transition-colors whitespace-nowrap">
+                                + Add
+                            </button>
+                        </form>
+                    </div>
+
+                    ${grupo.repescagem.length === 0 ? `
+                        <p class="text-xs text-slate-400 italic">Nenhum nome na repescagem.</p>
+                    ` : `
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+                            ${grupo.repescagem.map((nome, rIdx) => `
+                                <div draggable="true"
+                                    ondragstart="aoIniciarArraste(event, 'repescagem', '${grupoKey}', ${rIdx})"
+                                    ondragover="aoSobreArraste(event, 'repescagem', '${grupoKey}', ${rIdx})"
+                                    ondrop="aoSoltarItem(event, 'repescagem', '${grupoKey}', ${rIdx})"
+                                    ondragend="aoFinalizarArraste()"
+                                    class="bg-white px-3 py-1.5 rounded-xl border border-slate-200 flex items-center justify-between gap-2 shadow-sm cursor-grab active:cursor-grabbing">
+                                    <div class="flex items-center gap-1.5 min-w-0">
+                                        <span class="text-slate-300 hover:text-slate-500 select-none shrink-0">⋮⋮</span>
+                                        <span class="text-sm font-medium text-slate-700 truncate">${escaparHTML(nome)}</span>
+                                    </div>
+                                    <div class="flex items-center gap-1 shrink-0">
+                                        <button type="button" onclick="promoverRepescagem('${grupoKey}', ${rIdx})" 
+                                            class="text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-medium px-2 py-0.5 rounded-lg transition-colors" title="Mover para lista principal">
+                                            Promover ↑
+                                        </button>
+                                        <button type="button" onclick="removerRepescagem('${grupoKey}', ${rIdx})" 
+                                            class="text-slate-400 hover:text-rose-600 p-1 rounded-lg transition-colors text-xs" title="Remover">
+                                            ✕
+                                        </button>
+                                    </div>
+                                </div>
+                            `).join("")}
+                        </div>
+                    `}
+                </div>
+            `;
+        }
+
+        // =========================================================================
+        // AÇÕES DO USUÁRIO
+        // =========================================================================
+        function atualizarFiltro(valor) {
+            filtroStatus = valor;
+            renderizarAbaAtual();
+        }
+
+        function adicionarConvidado(event, grupoKey) {
+            event.preventDefault();
+            const inputNome = document.getElementById("novo-convidado-nome");
+            const nome = inputNome.value.trim();
+            if (!nome) return;
+
+            dados[grupoKey].guests.push({
+                nome: nome,
+                status: "Hold"
+            });
+            salvarDados();
+            renderizarAbaAtual();
+            mostrarToast(nome + " adicionado(a) à lista!");
+        }
+
+        function alterarStatus(grupoKey, index, novoStatus) {
+            if (dados[grupoKey].guests[index]) {
+                dados[grupoKey].guests[index].status = novoStatus;
+                salvarDados();
+                renderizarAbaAtual();
+            }
+        }
+
+        function removerConvidado(grupoKey, index) {
+            const nome = dados[grupoKey].guests[index].nome;
+            dados[grupoKey].guests.splice(index, 1);
+            salvarDados();
+            renderizarAbaAtual();
+            mostrarToast(nome + " removido(a).");
+        }
+
+        function rebaixarConvidado(grupoKey, index) {
+            const pessoa = dados[grupoKey].guests[index];
+            dados[grupoKey].guests.splice(index, 1);
+            dados[grupoKey].repescagem.push(pessoa.nome);
+            salvarDados();
+            renderizarAbaAtual();
+            mostrarToast(pessoa.nome + " movido(a) para a repescagem.");
+        }
+
+        function iniciarEdicao(index) {
+            editandoIndex = index;
+            renderizarAbaAtual();
+            const input = document.getElementById("edit-input-" + index);
+            if (input) {
+                input.focus();
+                input.setSelectionRange(input.value.length, input.value.length);
+            }
+        }
+
+        function cancelarEdicao() {
+            editandoIndex = null;
+            renderizarAbaAtual();
+        }
+
+        function salvarEdicao(grupoKey, index) {
+            if (editandoIndex === null) return;
+            const input = document.getElementById("edit-input-" + index);
+            if (input) {
+                const novoNome = input.value.trim();
+                if (novoNome) {
+                    dados[grupoKey].guests[index].nome = novoNome;
+                    salvarDados();
+                    mostrarToast("Nome atualizado!");
+                }
+            }
+            editandoIndex = null;
+            renderizarAbaAtual();
+        }
+
+        function adicionarRepescagem(event, grupoKey) {
+            event.preventDefault();
+            const input = document.getElementById("nova-repescagem-nome");
+            const nome = input.value.trim();
+            if (!nome) return;
+
+            dados[grupoKey].repescagem.push(nome);
+            salvarDados();
+            renderizarAbaAtual();
+            mostrarToast(nome + " adicionado(a) à repescagem.");
+        }
+
+        function promoverRepescagem(grupoKey, rIndex) {
+            const nome = dados[grupoKey].repescagem[rIndex];
+            dados[grupoKey].repescagem.splice(rIndex, 1);
+            dados[grupoKey].guests.push({
+                nome: nome,
+                status: "Hold"
+            });
+            salvarDados();
+            renderizarAbaAtual();
+            mostrarToast(nome + " promovido(a) para a lista principal!");
+        }
+
+        function removerRepescagem(grupoKey, rIndex) {
+            const nome = dados[grupoKey].repescagem[rIndex];
+            dados[grupoKey].repescagem.splice(rIndex, 1);
+            salvarDados();
+            renderizarAbaAtual();
+            mostrarToast(nome + " removido(a) da repescagem.");
+        }
+
+        function adicionarListaEspecial(event, tipo) {
+            event.preventDefault();
+            const input = document.getElementById("input-especial-" + tipo);
+            const nome = input.value.trim();
+            if (!nome) return;
+
+            dados[tipo].push(nome);
+            salvarDados();
+            renderizarAbaAtual();
+            mostrarToast(nome + " adicionado(a)!");
+        }
+
+        function removerListaEspecial(tipo, index) {
+            const nome = dados[tipo][index];
+            dados[tipo].splice(index, 1);
+            salvarDados();
+            renderizarAbaAtual();
+            mostrarToast(nome + " removido(a).");
+        }
+
+        function salvarHTML() {
+            try {
+                const htmlAtual = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+                const dadosSerializados = JSON.stringify(dados, null, 4);
+                const marcadorInicio = "/* DATA_START */";
+                const marcadorFim = "/* DATA_END */";
+
+                const idxInicio = htmlAtual.indexOf(marcadorInicio);
+                const idxFim = htmlAtual.indexOf(marcadorFim);
+
+                if (idxInicio === -1 || idxFim === -1) {
+                    throw new Error("Marcadores de dados não encontrados.");
+                }
+
+                const novoHtml =
+                    htmlAtual.slice(0, idxInicio + marcadorInicio.length) +
+                    " " + dadosSerializados + " " +
+                    htmlAtual.slice(idxFim);
+
+                const blob = new Blob([novoHtml], { type: "text/html;charset=utf-8" });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = "lista-convidados-casamento.html";
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                mostrarToast("Arquivo HTML salvo com todas as alterações!");
+            } catch (e) {
+                console.error("Erro ao salvar HTML:", e);
+                mostrarToast("Não foi possível gerar o arquivo HTML.");
+            }
+        }
+    </script>
+</body>
+</html>
